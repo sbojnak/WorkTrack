@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["WorkTrack/WorkTrack.csproj", "WorkTrack/"]
-RUN dotnet restore "WorkTrack/WorkTrack.csproj"
+COPY ["WorkTrack/WorkTrack.Api.csproj", "WorkTrack/"]
+RUN dotnet restore "WorkTrack/WorkTrack.Api.csproj"
 COPY . .
 WORKDIR "/src/WorkTrack"
-RUN dotnet build "WorkTrack.csproj" -c Release -o /app/build
+RUN dotnet build "WorkTrack.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WorkTrack.csproj" -c Release -o /app/publish
+RUN dotnet publish "WorkTrack.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WorkTrack.dll"]
+ENTRYPOINT ["dotnet", "WorkTrack.Api.dll"]

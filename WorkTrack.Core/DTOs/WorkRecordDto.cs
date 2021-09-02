@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace WorkTrack
+namespace WorkTrack.Core.DTOs
 {
-    public class WorkRecord
+    public class WorkRecordDto
     {
         public int Id { get; set; }
 

@@ -1,61 +1,74 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using WorkTrack.Core.DTOs;
+using WorkTrack.Core.Entities;
+using WorkTrack.Core.Interfaces;
 
 namespace WorkTrack.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("0.1")]
     [Route("api/v{version:apiVersion}/[controller]")]
     public class WorkRecordsController : ControllerBase
     {
-        private readonly ILogger<WorkRecordsController> _logger;
-        private readonly WorkTrackDbContext _workTrackDbContext;
+        private readonly ILogger<WorkRecordsController> logger;
+        private readonly IMapper mapper;
+        private readonly IRepository<WorkRecord> workRecordRepository;
 
         public WorkRecordsController(ILogger<WorkRecordsController> logger,
-            WorkTrackDbContext dbContext)
+            IRepository<WorkRecord> workRecordRepository,
+            IMapper mapper)
         {
-            _logger = logger;
-            _workTrackDbContext = dbContext;
+            this.logger = logger;
+            this.workRecordRepository = workRecordRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WorkRecord>>> Get()
+        public async Task<ActionResult<IEnumerable<WorkRecordDto>>> Get()
         {
-            var results = await _workTrackDbContext.WorkRecords.ToListAsync();
-            return Ok(results);
+            var records = await workRecordRepository.GetAllAsync();
+            if(records == null)
+            {
+                //throw exception
+            }
+            var recordDtos = records.Select(record => mapper.Map<WorkRecord, WorkRecordDto>(record));
+            return Ok(recordDtos);
         }
 
         [HttpGet]
         [Route("Id")]
-        public async Task<ActionResult<WorkRecord>> GetById(int id)
+        public async Task<ActionResult<WorkRecordDto>> GetById(int id)
         {
-            var result = await _workTrackDbContext.WorkRecords.FindAsync(id);
-            
-            if(result == null)
+            var record = await workRecordRepository.GetByIdAsync(id);
+            if (record == null)
             {
                 return NotFound();
             }
-            return Ok(result);
+            return Ok(mapper.Map<WorkRecord, WorkRecordDto>(record));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(WorkRecord newWorkRecord)
+        public async Task<ActionResult<WorkRecordDto>> Create(WorkRecordDto newWorkRecordDto)
         {
+            WorkRecord newWorkRecord;
             try
             {
-                _workTrackDbContext.WorkRecords.Add(newWorkRecord);
-                await _workTrackDbContext.SaveChangesAsync();
+                newWorkRecord = mapper.Map<WorkRecordDto, WorkRecord>(newWorkRecordDto);
+                await workRecordRepository.CreateAsync(newWorkRecord);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = newWorkRecord.Id }, newWorkRecord);
+            return CreatedAtAction(nameof(GetById), new { id = newWorkRecord.Id }, 
+                mapper.Map<WorkRecord, WorkRecordDto>(newWorkRecord));
         }
     }
 }

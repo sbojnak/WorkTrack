@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WorkTrack.Core.Entities;
 
-namespace WorkTrack
+namespace WorkTrack.Infrastructure
 {
     public class WorkTrackDbContext : DbContext
     {

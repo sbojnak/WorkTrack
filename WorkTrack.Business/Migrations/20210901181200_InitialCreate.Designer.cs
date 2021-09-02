@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WorkTrack;
+using WorkTrack.Infrastructure;
 
-namespace WorkTrack.Migrations
+namespace WorkTrack.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkTrackDbContext))]
-    [Migration("20210830150020_TimeSpanToDatetime")]
-    partial class TimeSpanToDatetime
+    [Migration("20210901181200_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace WorkTrack.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WorkTrack.WorkRecord", b =>
+            modelBuilder.Entity("WorkTrack.Core.Entities.WorkRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

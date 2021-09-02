@@ -1,18 +1,14 @@
 using GraphiQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WorkTrack.Core.Entities;
+using WorkTrack.Core.Mapping;
+using WorkTrack.Infrastructure;
 
 namespace WorkTrack
 {
@@ -34,8 +30,6 @@ namespace WorkTrack
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkTrack", Version = "v1" });
             });
 
-            services.AddDbContext<WorkTrackDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("WorkTrackDatabase")));
 
             services.AddApiVersioning(config =>
             {
@@ -46,6 +40,10 @@ namespace WorkTrack
                 // Advertise the API versions supported for the particular endpoint
                 config.ReportApiVersions = true;
             });
+
+            services.AddAutoMapper(typeof(AutomapperProfile));
+            services.AddInfrastructure(Configuration.GetConnectionString("WorkTrackDatabase"));
+            services.AddRepository<WorkRecord>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
