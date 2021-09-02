@@ -17,7 +17,7 @@ namespace WorkTrack.Api.GraphQL
         }
 
         [GraphQLDescription("Gets work records.")]
-        public async Task<IEnumerable<WorkRecord>> GetWorkRecordAsync()
+        public async Task<IEnumerable<WorkRecord>> GetWorkRecordsAsync()
         {
             var workRecords = await workRecordRepository.GetAllAsync();
             if(workRecords == null)
