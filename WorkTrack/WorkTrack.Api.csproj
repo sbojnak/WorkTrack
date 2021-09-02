@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WorkTrack.Business\WorkTrack.Infrastructure.csproj" />
     <ProjectReference Include="..\WorkTrack.Core\WorkTrack.Core.csproj" />
+    <ProjectReference Include="..\WorkTrack.Infrastructure\WorkTrack.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

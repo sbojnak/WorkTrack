@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31515.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkTrack.Api", "WorkTrack\WorkTrack.Api.csproj", "{7667C01F-227C-4C01-ABD7-8F39A2BE7878}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkTrack.Infrastructure", "WorkTrack.Business\WorkTrack.Infrastructure.csproj", "{CAC6FDCE-EACF-4877-871A-432E7BC30310}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkTrack.Infrastructure", "WorkTrack.Infrastructure\WorkTrack.Infrastructure.csproj", "{CAC6FDCE-EACF-4877-871A-432E7BC30310}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkTrack.Core", "WorkTrack.Core\WorkTrack.Core.csproj", "{4524F6C8-F007-42D8-B0D9-E2478CDA7C5C}"
 EndProject
