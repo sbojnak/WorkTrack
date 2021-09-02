@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WorkTrack.Api.GraphQL;
 using WorkTrack.Core.Entities;
-using WorkTrack.Core.Mapping;
 using WorkTrack.Infrastructure;
 
 namespace WorkTrack
@@ -41,14 +40,14 @@ namespace WorkTrack
                 config.ReportApiVersions = true;
             });
 
-            services.AddAutoMapper(typeof(AutomapperProfile));
             services.AddInfrastructure(Configuration.GetConnectionString("WorkTrackDatabase"));
             services.AddRepository<WorkRecord>();
 
             //GraphQl
             services.AddScoped<Query>();
             services.AddGraphQLServer()
-                .AddQueryType<Query>();
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
