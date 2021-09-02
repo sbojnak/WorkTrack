@@ -9,7 +9,7 @@ using WorkTrack.Core.DTOs;
 using WorkTrack.Core.Entities;
 using WorkTrack.Core.Interfaces;
 
-namespace WorkTrack.Controllers
+namespace WorkTrack.Api.Rest.Controllers
 {
     [ApiController]
     [ApiVersion("0.1")]

@@ -1,4 +1,3 @@
-using GraphiQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WorkTrack.Api.GraphQL;
 using WorkTrack.Core.Entities;
 using WorkTrack.Core.Mapping;
 using WorkTrack.Infrastructure;
@@ -44,6 +44,11 @@ namespace WorkTrack
             services.AddAutoMapper(typeof(AutomapperProfile));
             services.AddInfrastructure(Configuration.GetConnectionString("WorkTrackDatabase"));
             services.AddRepository<WorkRecord>();
+
+            //GraphQl
+            services.AddScoped<Query>();
+            services.AddGraphQLServer()
+                .AddQueryType<Query>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,10 +70,8 @@ namespace WorkTrack
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGraphQL();
             });
-
-            //experimenting with graphQL
-            app.UseGraphiQl("/graphql");
         }
     }
 }
