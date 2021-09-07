@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WorkTrack.Api.Models;
+using WorkTrack.Core.CommandModels;
 using WorkTrack.Core.Entities;
-using WorkTrack.Core.Interfaces;
+using WorkTrack.Core.QueryModels;
 
 namespace WorkTrack.Api.Rest.Controllers
 {
@@ -16,20 +17,20 @@ namespace WorkTrack.Api.Rest.Controllers
     public class WorkRecordsController : ControllerBase
     {
         private readonly ILogger<WorkRecordsController> logger;
-        private readonly IRepository<WorkRecord> workRecordRepository;
+        private readonly IMediator mediator;
 
         public WorkRecordsController(ILogger<WorkRecordsController> logger,
-            IRepository<WorkRecord> workRecordRepository)
+            IMediator mediator)
         {
             this.logger = logger;
-            this.workRecordRepository = workRecordRepository;
+            this.mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<WorkRecord>>> Get()
+        public async Task<ActionResult<IEnumerable<WorkRecord>>> GetAsync([FromQuery] GetWorkRecordsQueryModel filter)
         {
-            var records = await workRecordRepository.GetAllAsync();
-            if(records == null)
+            var records = await mediator.Send(filter);
+            if (records == null)
             {
                 //throw exception
             }
@@ -37,10 +38,12 @@ namespace WorkTrack.Api.Rest.Controllers
         }
 
         [HttpGet]
-        [Route("Id")]
-        public async Task<ActionResult<WorkRecord>> GetById(int id)
+        [Route("{id}")]
+        public async Task<ActionResult<WorkRecord>> GetByIdAsync(int id)
         {
-            var record = await workRecordRepository.GetByIdAsync(id);
+            var filter = new GetWorkRecordsQueryModel(Id: id, Start: null, End: null, Description: null);
+
+            var record = (await mediator.Send(filter)).SingleOrDefault();
             if (record == null)
             {
                 return NotFound();
@@ -49,7 +52,7 @@ namespace WorkTrack.Api.Rest.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<WorkRecord>> Create(AddWorkRecordInput newWorkRecordInput)
+        public async Task<ActionResult<WorkRecord>> CreateAsync(CreateWorkRecordCommandModel newWorkRecordInput)
         {
             WorkRecord newWorkRecord;
             try
@@ -60,14 +63,14 @@ namespace WorkTrack.Api.Rest.Controllers
                     End = newWorkRecordInput.End,
                     Description = newWorkRecordInput.Description
                 };
-                await workRecordRepository.CreateAsync(newWorkRecord);
+                newWorkRecord = await mediator.Send(newWorkRecordInput);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex);
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = newWorkRecord.Id }, newWorkRecord);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = newWorkRecord.Id }, newWorkRecord);
         }
     }
 }

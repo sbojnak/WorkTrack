@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using WorkTrack.Core.Entities;
 
 namespace WorkTrack.Infrastructure

@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -41,13 +42,19 @@ namespace WorkTrack
             });
 
             services.AddInfrastructure(Configuration.GetConnectionString("WorkTrackDatabase"));
-            services.AddRepository<WorkRecord>();
 
             //GraphQl
             services.AddScoped<Query>();
             services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>();
+
+            services.AddMediatR(typeof(Startup).Assembly);
+
+            services.AddMvc(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,30 +1,22 @@
-﻿using System.Threading.Tasks;
-using WorkTrack.Api.Models;
+﻿using MediatR;
+using System.Threading.Tasks;
+using WorkTrack.Core.CommandModels;
 using WorkTrack.Core.Entities;
-using WorkTrack.Core.Interfaces;
 
 namespace WorkTrack.Api.GraphQL
 {
     public class Mutation
     {
-        private readonly IRepository<WorkRecord> workRecordRepository;
+        private readonly IMediator mediator;
 
-        public Mutation(IRepository<WorkRecord> workRecordRepository)
+        public Mutation(IMediator mediator)
         {
-            this.workRecordRepository = workRecordRepository;
+            this.mediator = mediator;
         }
 
-        public async Task<AddWorkRecordPayload> AddWorkRecordAsync(AddWorkRecordInput input)
+        public async Task<WorkRecord> AddWorkRecordAsync(CreateWorkRecordCommandModel input)
         {
-            var newWorkRecord = new WorkRecord
-            {
-                Start = input.Start,
-                End = input.End,
-                Description = input.Description
-            };
-
-            await workRecordRepository.CreateAsync(newWorkRecord);
-            return new AddWorkRecordPayload(newWorkRecord);
+            return await mediator.Send(input);
         }
     }
 }

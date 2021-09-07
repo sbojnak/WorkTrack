@@ -1,31 +1,32 @@
 ﻿using HotChocolate;
+using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkTrack.Core.Entities;
-using WorkTrack.Core.Interfaces;
 
 namespace WorkTrack.Api.GraphQL
 {
     public class Query
     {
-        private readonly IRepository<WorkRecord> workRecordRepository;
+        private readonly IMediator mediator;
 
-        public Query(IRepository<WorkRecord> workRecordRepository)
+        public Query(IMediator mediator)
         {
-            this.workRecordRepository = workRecordRepository;
+            this.mediator = mediator;
         }
 
         [GraphQLDescription("Gets work records.")]
         public async Task<IEnumerable<WorkRecord>> GetWorkRecordsAsync()
         {
-            var workRecords = await workRecordRepository.GetAllAsync();
-            if(workRecords == null)
-            {
-                return Enumerable.Empty<WorkRecord>();
-            }
+            //mediator.Send()
+            //if (workRecords == null)
+            //{
+            //    return Queryable.AsQueryable(Enumerable.Empty<WorkRecord>());
+            //}
 
-            return workRecords;
+            //return workRecords;
+            throw new System.Exception();
         }
     }
 }
