@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkTrack.Core.Entities;
+using WorkTrack.Core.QueryModels;
 
 namespace WorkTrack.Api.GraphQL
 {
@@ -16,17 +17,18 @@ namespace WorkTrack.Api.GraphQL
             this.mediator = mediator;
         }
 
+        //TODO: change to IQueryable
         [GraphQLDescription("Gets work records.")]
         public async Task<IEnumerable<WorkRecord>> GetWorkRecordsAsync()
         {
-            //mediator.Send()
-            //if (workRecords == null)
-            //{
-            //    return Queryable.AsQueryable(Enumerable.Empty<WorkRecord>());
-            //}
+            var queryModel = new GetWorkRecordsQueryModel(Id: null, Start: null, End: null, Description: null);
+            var workRecords = await mediator.Send(queryModel);
+            if (workRecords == null)
+            {
+                return Queryable.AsQueryable(Enumerable.Empty<WorkRecord>());
+            }
 
-            //return workRecords;
-            throw new System.Exception();
+            return workRecords;
         }
     }
 }

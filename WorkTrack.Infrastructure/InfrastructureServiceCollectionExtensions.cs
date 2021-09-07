@@ -14,7 +14,7 @@ namespace WorkTrack.Infrastructure
             services.AddDbContext<WorkTrackDbContext>(
                 options => options.UseSqlServer(dbConnectionString), ServiceLifetime.Scoped);
 
-            services.AddMediatR(typeof(CreateWorkRecordCommandHandler).Assembly);
+            services.AddMediatR(c => c.AsScoped(), typeof(CreateWorkRecordCommandHandler).Assembly);
         }
     }
 }

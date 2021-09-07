@@ -45,11 +45,12 @@ namespace WorkTrack
 
             //GraphQl
             services.AddScoped<Query>();
+            services.AddScoped<Mutation>();
             services.AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>();
 
-            services.AddMediatR(typeof(Startup).Assembly);
+            services.AddMediatR(c => c.AsScoped(), typeof(Startup).Assembly);
 
             services.AddMvc(options =>
             {
