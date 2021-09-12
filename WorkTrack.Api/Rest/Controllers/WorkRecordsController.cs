@@ -57,12 +57,6 @@ namespace WorkTrack.Api.Rest.Controllers
             WorkRecord newWorkRecord;
             try
             {
-                newWorkRecord = new WorkRecord
-                {
-                    Start = newWorkRecordInput.Start,
-                    End = newWorkRecordInput.End,
-                    Description = newWorkRecordInput.Description
-                };
                 newWorkRecord = await mediator.Send(newWorkRecordInput);
             }
             catch(Exception ex)
